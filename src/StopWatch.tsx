@@ -3,12 +3,12 @@ import { useRef, useState } from "react";
 function StopWatch() {
   // const [millisecondsRef.current, setMilliseconds] = useState(0);
   // const [seconds, setSeconds] = useState(0);
-  const [timeToShow, setTimeToShow] = useState("90 : 00");
+  const [timeToShow, setTimeToShow] = useState("00 : 00");
   const [interval, setTheInterval] = useState<NodeJS.Timer | null>(null);
   const [timerState, setTimerState] = useState<"idle" | "counting" | "paused">("idle");
 
   const millisecondsRef = useRef<number>(0);
-  const secondsRef = useRef<number>(90);
+  const secondsRef = useRef<number>(0);
 
   const showFormattedTime = () => {
     let milliseconds = millisecondsRef.current.toLocaleString("en-US", { minimumIntegerDigits: 2, useGrouping: false });
@@ -16,14 +16,14 @@ function StopWatch() {
     setTimeToShow(seconds + " : " + milliseconds);
   };
 
-  const startTimer = () => {
+  const stratTimer = () => {
     const newInterval = setInterval(() => {
-      if (millisecondsRef.current > 0) {
-        millisecondsRef.current = millisecondsRef.current - 1;
+      if (millisecondsRef.current < 99) {
+        millisecondsRef.current = millisecondsRef.current + 1;
         showFormattedTime();
       } else {
-        millisecondsRef.current = 99;
-        secondsRef.current = secondsRef.current - 1;
+        millisecondsRef.current = 0;
+        secondsRef.current = secondsRef.current + 1;
         showFormattedTime();
       }
     }, 10);
@@ -39,12 +39,12 @@ function StopWatch() {
   };
   const resumeTimer = () => {
     const newInterval = setInterval(() => {
-      if (millisecondsRef.current > 0) {
-        millisecondsRef.current = millisecondsRef.current - 1;
+      if (millisecondsRef.current < 99) {
+        millisecondsRef.current = millisecondsRef.current + 1;
         showFormattedTime();
       } else {
-        millisecondsRef.current = 99;
-        secondsRef.current = secondsRef.current - 1;
+        millisecondsRef.current = 0;
+        secondsRef.current = secondsRef.current + 1;
         showFormattedTime();
       }
     }, 10);
@@ -55,9 +55,9 @@ function StopWatch() {
   const resetTimer = () => {
     if (interval) {
       clearInterval(interval);
-      setTimeToShow("90 : 00")
+      setTimeToShow("00 : 00")
       millisecondsRef.current = 0;
-      secondsRef.current = 90;
+      secondsRef.current = 0;
       setTimerState("idle");
     }
   };
@@ -69,7 +69,7 @@ function StopWatch() {
         <span>{timeToShow}</span>
       </div>
       <div>
-        {timerState === "idle" && <button onClick={startTimer}>Start</button>}
+        {timerState === "idle" && <button onClick={stratTimer}>Start</button>}
         {timerState === "counting" && <button onClick={pauseTimer}>Pause</button>}
         {timerState === "paused" && <button onClick={resumeTimer}>Resume</button>}
         {timerState !== "idle" && <button onClick={resetTimer}>Reset</button>}
